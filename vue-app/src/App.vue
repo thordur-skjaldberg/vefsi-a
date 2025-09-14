@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
 </script>
 
 <template>
@@ -10,10 +9,17 @@ import TheWelcome from './components/TheWelcome.vue'
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
     </div>
+
+    <!-- basic navigation -->
+    <nav>
+      <RouterLink to="/">Forsíða</RouterLink> |
+      <RouterLink to="/about">Um vefinn</RouterLink> 
+    </nav>
   </header>
 
   <main>
-    <TheWelcome />
+    <!-- routing  -->
+    <RouterView />
   </main>
 </template>
 
