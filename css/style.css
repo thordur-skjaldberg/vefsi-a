@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: #0a1a3f; /* dökkblár bakgrunnur */
+  background: #0a1a3f;
   color: #eef1f7;
   display: flex;
   flex-direction: column;
@@ -11,7 +11,7 @@ body {
 header {
   text-align: center;
   padding: 12px;
-  background: #0d235c; /* aðeins dekkri blár fyrir header */
+  background: #0d235c;
   border-bottom: 1px solid rgba(255, 187, 0, 0.178);
 }
 
@@ -60,35 +60,41 @@ footer {
   font-size: 16px;
   font-weight: bold;
 }
+main {
+  padding-bottom: 90px;
+}
+
 .fimmkassar {
-  display: flex;
-  gap: 10px; /* bil á milli kassanna */
-  justify-content: center; /* miðja röðina */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  z-index: 50;
 }
 
 .fimmkassar a {
-  flex: 1; /* allir jafn stórir */
-  max-width: 150px; /* hámarksbreidd */
-  aspect-ratio: 1/1; /* heldur kassalaga */
-  background-color: lightblue;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-weight: bold;
-  text-decoration: none;
-  color: black;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-  cursor: pointer;
+  align-items: center;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
-.fimmkassar a:hover {
-  background-color: dodgerblue;
-  color: white;
+.fimmkassar a.active {
+  background: #ffd60a;
+  box-shadow: 0 8px 18px rgba(255, 214, 10, 0.35);
 }
-.fimmkassar img {
-  width: 50%;
-  height: 50%;
-  object-fit: cover; /* heldur hlutföllunum */
-  border-radius: 8px; /* sama útlit og kassarnir */
+
+.fimmkassar a img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }

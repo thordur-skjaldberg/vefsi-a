@@ -9,4 +9,37 @@
   <body>
     upplysingar um ofnæmi
   </body>
+    <div class="fimmkassar">
+      <a href="kort.html">
+        <img src="../myndir/kort mynd.png" alt="Kort" />
+      </a>
+      <a href="samanburður.html">
+        <img src="../myndir/berasamann.png" alt="Samanburður" />
+      </a>
+      <a href="forsiða.html">
+        <img src="../myndir/borða.png" alt="Skanna" />
+      </a>
+      <a href="user.html">
+        <img src="../myndir/user.png" alt="Notandi" />
+      </a>
+      <a href="bætaviðvoru.html">
+        <img src="../myndir/plus.png" alt="Bæta við vöru" />
+      </a>
+    </div>
+    <script>
+      (function () {
+        const current = decodeURI(
+          location.pathname.split("/").pop() || "index.html"
+        );
+        document.querySelectorAll(".fimmkassar a[href]").forEach((a) => {
+          const target = decodeURI(
+            new URL(a.getAttribute("href"), location.href).pathname
+              .split("/")
+              .pop()
+          );
+          if (target === current) a.classList.add("active");
+        });
+      })();
+    </script>
+  </div>
 </html>

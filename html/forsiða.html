@@ -6,6 +6,21 @@
     <title>Innihald – Forsíða</title>
     <link rel="stylesheet" href="../css/style.css" />
   </head>
+  <script>
+    (function () {
+      const current = decodeURI(
+        location.pathname.split("/").pop() || "index.html"
+      );
+      document.querySelectorAll(".fimmkassar a[href]").forEach((a) => {
+        const target = decodeURI(
+          new URL(a.getAttribute("href"), location.href).pathname
+            .split("/")
+            .pop()
+        );
+        if (target === current) a.classList.add("active");
+      });
+    })();
+  </script>
   <body>
     <header>
       <h1>Innihald</h1>
@@ -26,13 +41,15 @@
     </footer>
 
     <div class="fimmkassar">
-      <a href="kort.html">
-        <img src="../myndir/kort mynd.png" alt="Kort" />
-      </a>
-      <a href="user.html">img</a>
-      <a href=""></a>
-      <a href="samanburður.html">Samanburður</a>
-      <a href=""></a>
+      <a href="kort.html"><img src="../myndir/kort mynd.png" alt="Kort" /></a>
+      <a href="samanburður.html"
+        ><img src="../myndir/berasamann.png" alt="berasamann"
+      /></a>
+      <a href="forsíða.html" class="active"
+        ><img src="../myndir/borða.png" alt="scan"
+      /></a>
+      <a href="user.html"><img src="../myndir/user.png" alt="user" /></a>
+      <a href="bætaviðvoru.html"></a>
     </div>
   </body>
 </html>
