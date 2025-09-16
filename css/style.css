@@ -86,3 +86,9 @@ footer {
   background-color: dodgerblue;
   color: white;
 }
+.fimmkassar img {
+  width: 50%;
+  height: 50%;
+  object-fit: cover; /* heldur hlutföllunum */
+  border-radius: 8px; /* sama útlit og kassarnir */
+}
