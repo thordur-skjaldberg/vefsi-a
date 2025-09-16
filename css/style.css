@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #0a1a3f; /* dökkblár bakgrunnur */
+  color: #eef1f7;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 12px;
+  background: #0d235c; /* aðeins dekkri blár fyrir header */
+  border-bottom: 1px solid rgba(255, 187, 0, 0.178);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.camera-placeholder {
+  width: 80%;
+  max-width: 320px;
+  aspect-ratio: 3/4;
+  border: 3px dashed #4f7cff;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+  color: #b9c0cd;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.info {
+  text-align: center;
+  font-size: 14px;
+  color: #cfd7eb;
+}
+
+footer {
+  padding: 16px;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.btn {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #4f7cff, #7aa2ff);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: bold;
+}
