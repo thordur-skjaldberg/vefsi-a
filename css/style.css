@@ -33,7 +33,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   color: #b9c0cd;
   font-size: 18px;
   margin-bottom: 20px;
@@ -48,7 +48,7 @@ main {
 footer {
   padding: 16px;
   text-align: center;
-  border-top: 1px solid rgba(255,255,255,.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn {
@@ -59,4 +59,30 @@ footer {
   border-radius: 999px;
   font-size: 16px;
   font-weight: bold;
+}
+.fimmkassar {
+  display: flex;
+  gap: 10px; /* bil á milli kassanna */
+  justify-content: center; /* miðja röðina */
+}
+
+.fimmkassar a {
+  flex: 1; /* allir jafn stórir */
+  max-width: 150px; /* hámarksbreidd */
+  aspect-ratio: 1/1; /* heldur kassalaga */
+  background-color: lightblue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.fimmkassar a:hover {
+  background-color: dodgerblue;
+  color: white;
 }
