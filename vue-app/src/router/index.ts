@@ -1,14 +1,25 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HelloWorld from '../components/HelloWorld.vue'
-import TheWelcome from '../components/TheWelcome.vue' 
+import { createRouter, createWebHistory } from "vue-router";
 
-const routes = [
-  { path: '/', name: 'home', component: HelloWorld },
-  { path: '/about', name: 'about', component: TheWelcome }, 
-  { path: '/:pathMatch(.*)*', name: 'not-found', component: HelloWorld } //hálfgert 404? vantar meira... 
-]
+// TEMP: inline component to prove the router uses this file
+const ForsidaTEST = {
+  template: '<div style="padding:1rem"><h1>Forsíða TEST</h1></div>',
+};
 
-export default createRouter({
-  history: createWebHistory(),
-  routes,
-})
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    { path: "/", name: "home", component: ForsidaTEST }, // <- must show "Forsíða TEST"
+    {
+      path: "/about",
+      name: "about",
+      component: { template: "<div>About</div>" },
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "not-found",
+      component: { template: "<div>404 – Síða fannst ekki</div>" },
+    },
+  ],
+});
+
+export default router;
