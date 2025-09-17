@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Search</title>
+</head>
+<body>
+    <h1>Food Search</h1>
+    <form method="POST">
+        <input type="text" name="query" placeholder="Enter food name">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if result %}
+        {% if result.error %}
+            <p>{{ result.error }}</p>
+        {% else %}
+            <h2>{{ result.name }}</h2>
+            <p><strong>Brand:</strong> {{ result.brand }}</p>
+            <p><strong>Calories:</strong> {{ result.calories }}</p>
+            <p><strong>Protein:</strong> {{ result.protein }} g</p>
+            <p><strong>Ingredients:</strong> {{ result.ingredients }}</p>
+            <p><strong>Allergens:</strong> {{ result.allergens | join(", ") }}</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

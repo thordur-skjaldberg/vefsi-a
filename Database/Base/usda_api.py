@@ -1,10 +1,9 @@
 import os
 import requests
 import re
-import math
 
 # ========= CONFIG =========
-API_KEY =  "aCrTfyqv6LOLNUnoumPFEsuJ8v0srNS670PleDrX"
+API_KEY = "aCrTfyqv6LOLNUnoumPFEsuJ8v0srNS670PleDrX"
 SEARCH_URL = "https://api.nal.usda.gov/fdc/v1/foods/search"
 DETAIL_URL = "https://api.nal.usda.gov/fdc/v1/food/{}"
 # ==========================
@@ -44,11 +43,10 @@ def normalize_text_field(x):
 def detect_allergens_from_text(text):
     text = (text or "").lower()
     found = set()
-    # normalize punctuation: replace common separators with spaces so \b works better
+    # normalize punctuation
     text_for_search = re.sub(r"[^\w']", " ", text)
     for allergen, keywords in ALLERGEN_KEYWORDS.items():
         for kw in keywords:
-            # use word boundary search; escape kw to be safe
             pattern = r"\b" + re.escape(kw.lower()) + r"\b"
             if re.search(pattern, text_for_search):
                 found.add(allergen)
@@ -56,8 +54,9 @@ def detect_allergens_from_text(text):
     return found
 
 def extract_nutrients(food_detail):
-    # foodNutrients is a list of dicts with 'nutrientName', 'value', 'unitName'
     nutrients = {}
+
+    # 1. foodNutrients (generic/common foods)
     for n in food_detail.get("foodNutrients", []) or []:
         name = n.get("nutrientName", "").lower()
         val = n.get("value")
@@ -65,67 +64,56 @@ def extract_nutrients(food_detail):
         if not name or val is None:
             continue
         nutrients[name] = (val, unit)
-    # try also 'labelNutrients' if present (some branded items)
+
+    # 2. labelNutrients (branded/packaged products)
     ln = food_detail.get("labelNutrients") or {}
-    # labelNutrients structure differs; handle common keys
     for key, v in ln.items():
         if isinstance(v, dict) and "value" in v:
-            nutrients[key.lower()] = (v["value"], v.get("unitName", "g"))
+            unit = "g"
+            if key.lower() in ["calories", "energy"]:
+                unit = "kcal"
+            nutrients[key.lower()] = (v["value"], unit)
+
     return nutrients
 
 def pretty_calories(nutrients):
-    # USDA often labels energy as "Energy" with unitName 'kJ' or 'kcal'
-    if "energy" in nutrients:
-        val, unit = nutrients["energy"]
-        unit = (unit or "").lower()
-        if unit == "kj":
-            kcal = round(val / 4.184, 1)
-            return f"{val} kJ (~{kcal} kcal)"
-        else:
-            return f"{val} {unit or 'kcal'}"
-    # fallback: check for 'calories' or 'energy (kcal)'
-    for k in nutrients:
-        if "calor" in k or "energy" in k:
-            v, u = nutrients[k]
-            return f"{v} {u or ''}".strip()
+    for key in ["energy", "calories"]:
+        if key in nutrients:
+            val, unit = nutrients[key]
+            return f"{val} {unit}"
     return "N/A"
 
 def pretty_protein(nutrients):
-    for k in nutrients:
-        if "protein" in k:
-            v, u = nutrients[k]
-            return f"{v} {u or 'g'}"
+    for key in nutrients:
+        if "protein" in key:
+            val, unit = nutrients[key]
+            return f"{val} {unit}"
     return "N/A"
 
 def search_and_report(food_name):
     try:
         foods = jq_search(food_name)
     except requests.RequestException as e:
-        print("Network/API error during search:", e)
-        return
+        return {"error": f"Network/API error during search: {e}"}
 
     if not foods:
-        print("No USDA results found for:", food_name)
-        return
+        return {"error": f"No USDA results found for: {food_name}"}
 
-    # pick best candidate (first), but you may loop through more candidates or present choices to user
     candidate = foods[0]
     fdc_id = candidate.get("fdcId")
     description = normalize_text_field(candidate.get("description"))
     brand = candidate.get("brandOwner") or candidate.get("brandName") or "N/A"
-    # Try to get ingredients from search result (sometimes included)
     search_ingredients = normalize_text_field(candidate.get("ingredients"))
 
-    # fetch detailed record (this often includes the 'ingredients' text for branded foods)
+    # fetch detailed record
     details = {}
     try:
         if fdc_id:
             details = get_food_details(fdc_id)
     except requests.RequestException:
-        # if details fail, we still try to detect from available fields
         details = {}
 
-    # extract various text fields to scan for allergen keywords
+    # gather text for allergen detection
     detail_ingredients = normalize_text_field(details.get("ingredients"))
     other_text = " ".join(filter(None, [
         description,
@@ -144,27 +132,15 @@ def search_and_report(food_name):
     calories = pretty_calories(nutrients)
     protein = pretty_protein(nutrients)
 
-    print("🍴 Name:", description)
-    print("🏭 Brand:", brand)
-    print("🔥 Calories:", calories)
-    print("💪 Protein:", protein)
-    print("📝 Ingredients (search result):", search_ingredients or "N/A")
-    print("📝 Ingredients (details):", detail_ingredients or "N/A")
-    if detected_allergens:
-        print("⚠️ Detected allergens:", ", ".join(sorted(detected_allergens)))
-    else:
-        print("⚠️ Detected allergens: No major allergens found in available text fields.")
-    print("—")
-    # If you'd like, return structured dict
     return {
         "fdcId": fdc_id,
         "name": description,
         "brand": brand,
         "calories": calories,
         "protein": protein,
-        "ingredients_search": search_ingredients,
-        "ingredients_details": detail_ingredients,
-        "allergens": sorted(detected_allergens)
+        "ingredients_search": search_ingredients or "N/A",
+        "ingredients_details": detail_ingredients or "N/A",
+        "allergens": sorted(detected_allergens) if detected_allergens else ["No major allergens found"],
     }
 
 if __name__ == "__main__":
@@ -173,5 +149,4 @@ if __name__ == "__main__":
         print("Please type a food name (e.g. 'Peanut M&M').")
     else:
         result = search_and_report(term)
-        # optional: print as dict
-        # import pprint; pprint.pprint(result)
+        print(result)
