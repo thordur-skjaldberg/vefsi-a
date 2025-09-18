@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import TextScanner from "@/components/scanner/TextScanner.vue";
+import TextScanner from "@/components/Scanner/TextScanner.vue";
 
 const paths = {
   kort: "kort.html",
